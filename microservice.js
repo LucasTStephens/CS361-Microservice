@@ -16,36 +16,39 @@ app.use(bodyParser.json());
 const uri = "mongodb+srv://stephluc:stephluc@cluster0.3rky536.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 const client = new MongoClient(uri);
 const database = client.db('Recipies');
-const recipies = database.collection('recipies');
+const recipes = database.collection('recipies');
 
 app.get('/', (req, res) => {
   res.send('Hello from the Microservice!');
 });
 
-// retrieve all recipies in database
-app.get('/recipies', async (req, res) => {
-  const results = await recipies.findOne();
+// retrieve all recipes in database
+app.get('/recipes', async (req, res) => {
+  var results = await recipes.find({}).toArray(function (err, result) {
+    if(err) return done( err );
+    done(null, JSON.stringify(result));
+  });
   console.log(results);
   res.send(results);
 });
 
-// retrieve all recipies in database where name = {name}  UNFINISHED
-app.get('/recipies/name', async (req, res) => {
-  const results = await recipies.findOne();
+// retrieve all recipes in database where name = {name}  UNFINISHED
+app.get('/recipes/name', async (req, res) => {
+  const results = await recipes.findOne();
   console.log(results);
   res.send(results);
 });
 
-// retrieve all recipies in database where totalCalories = {calories}  UNFINISHED
-app.get('/recipies/calories', async (req, res) => {
-  const results = await recipies.findOne();
+// retrieve all recipes in database where totalCalories = {calories}  UNFINISHED
+app.get('/recipes/calories', async (req, res) => {
+  const results = await recipes.findOne();
   console.log(results);
   res.send(results);
 });
 
 // add recipie to database
-app.post('/recipies', async (req, res) => {
-  await recipies.insertOne({
+app.post('/recipes', async (req, res) => {
+  await recipes.insertOne({
     Name: req.body["Name"],
     totalCalories: req.body["totalCalories"],
     Ingredients: req.body["Ingredients"]

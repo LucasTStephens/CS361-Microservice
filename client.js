@@ -7,15 +7,17 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3562;
 
+// MUST BE UPDATED TO CURRENT HOSTER
+const microserviceURL = 'http://flip4.engr.oregonstate.edu:3374/recipes'
 
 // parser for POST data
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.get('/recipies', async (req, res) => {
-    // send request to recipies microservice
+app.get('/recipes', async (req, res) => {
+    // send request to recipes microservice
     try {
-      const recipeResponse = await axios.get('http://flip2.engr.oregonstate.edu:3374/recipies');
+      const recipeResponse = await axios.get(microserviceURL);
       res.send(recipeResponse.data);
     } catch (error) {
       console.error(`Error fetching data from recipe Microservice: ${error.message}`);
@@ -23,10 +25,10 @@ app.get('/recipies', async (req, res) => {
     }
   });
 
-  app.get('/recipies/post', async (req, res) => {
-    // send request to recipies microservice
+  app.get('/recipes/post', async (req, res) => {
+    // send request to recipes microservice
     try {
-        const recipeResponse = await axios.post('http://flip2.engr.oregonstate.edu:3374/recipies', {
+        const recipeResponse = await axios.post(microserviceURL, {
             Name: 'Kebab',
             totalCalories: '1200',
             Ingredients: [{Name: "Tomato", Measurement: "200g", Calories: "200"}, {Name: "Rice", Measurement: "800g", Calories: "1000"}]
